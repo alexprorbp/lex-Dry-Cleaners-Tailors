@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alex Dry Cleaners & Tailors</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 0; }
+    main { max-width: 800px; margin: auto; background: #fff; padding: 2em; }
+    h1, h2 { color: #003366; }
+    label { display: block; margin: 0.5em 0; }
+    .total { font-weight: bold; font-size: 1.2em; margin-top: 1em; }
+    button { background: #003366; color: white; border: none; padding: 0.5em 1em; margin-top: 1em; cursor: pointer; }
+    button:hover { background: #005599; }
+    input[type=text], input[type=tel], textarea { width: 100%; padding: 0.5em; margin-top: 0.5em; margin-bottom: 1em; }
+    .pay-buttons button { margin-right: 1em; }
+    #qr-section { display: none; margin-top: 1em; }
+    #qr-section img { max-width: 300px; display: block; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="storefront.jpg" alt="Storefront" style="width:100%; margin-bottom: 1em; border-radius: 8px;" />
+    <h1>Alex Dry Cleaners & Tailors</h1>
+    <p>7411 El Cajon Blvd, La Mesa, CA 91942</p>
+
+    <h2>Select Items for Cleaning</h2>
+    <form id="calcForm">
+<label><input type="checkbox" class="price-box" value="150.0"> Wedding Dress – $150.00</label>
+<label><input type="checkbox" class="price-box" value="27.0"> 3pc Suit – $27.00</label>
+<label><input type="checkbox" class="price-box" value="30.0"> Tuxedo – $30.00</label>
+<label><input type="checkbox" class="price-box" value="22.0"> Evening Dress – $22.00</label>
+<label><input type="checkbox" class="price-box" value="28.0"> Coat – $28.00</label>
+<label><input type="checkbox" class="price-box" value="28.0"> Long Jacket – $28.00</label>
+<label><input type="checkbox" class="price-box" value="14.0"> Suit Jacket / Blazer – $14.00</label>
+<label><input type="checkbox" class="price-box" value="10.0"> Pants / Jeans – $10.00</label>
+<label><input type="checkbox" class="price-box" value="9.5"> Blouse / Sweater – $9.50</label>
+<label><input type="checkbox" class="price-box" value="8.0"> Skirt – $8.00</label>
+<label><input type="checkbox" class="price-box" value="62.0"> Down Comforter – $62.00</label>
+<label><input type="checkbox" class="price-box" value="55.0"> Comforter King – $55.00</label>
+<label><input type="checkbox" class="price-box" value="50.0"> Comforter Queen – $50.00</label>
+<label><input type="checkbox" class="price-box" value="45.0"> Comforter Twin – $45.00</label>
+<label><input type="checkbox" class="price-box" value="40.0"> Blanket King – $40.00</label>
+<label><input type="checkbox" class="price-box" value="36.0"> Blanket Queen – $36.00</label>
+<label><input type="checkbox" class="price-box" value="40.0"> Duvet Cover – $40.00</label>
+<label><input type="checkbox" class="price-box" value="3.95"> Sheets (per lb) – $3.95</label>
+<label><input type="checkbox" class="price-box" value="18.0"> Pillow – $18.00</label>
+<label><input type="checkbox" class="price-box" value="28.0"> Mattress Pad – $28.00</label>
+<label><input type="checkbox" class="price-box" value="22.0"> Bed Skirt – $22.00</label>
+<label><input type="checkbox" class="price-box" value="30.0"> Tablecloth – $30.00</label>
+<label><input type="checkbox" class="price-box" value="36.0"> Rug – $36.00</label>
+
+    <div class="total">Subtotal: $<span id="subtotal">0.00</span></div>
+    <div class="total">Total: $<span id="total">0.00</span></div>
+
+    <div class="pay-buttons">
+      <p><strong>Select payment method:</strong></p>
+      <button type="button" onclick="selectPayment('Cash')">Pay with Cash</button>
+      <button type="button" onclick="selectPayment('Cash App'); showQR()">Pay via Cash App</button>
+    </div>
+
+    <div id="qr-section">
+      <p><strong>Scan with Cash App:</strong></p>
+      <img src="cashapp_qr.png" alt="Cash App QR Code" />
+      <p><a href="https://cash.app/$Alexprorbp2022" target="_blank">Go to cash.app/$Alexprorbp2022</a></p>
+    </div>
+
+    <input type="hidden" name="payment_method" id="payment_method" value="">
+    <button type="button" onclick="resetForm()">Clear Selection</button>
+  </form>
+
+  <h2>Pickup Request</h2>
+  <form action="mailto:alexprorbp@gmail.com" method="POST" enctype="text/plain">
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="text" name="address" placeholder="Pickup Address" required />
+    <input type="tel" name="phone" placeholder="Phone Number" required />
+    <textarea name="notes" placeholder="Additional Notes"></textarea>
+    <input type="text" name="Payment Method" id="confirm_payment" readonly placeholder="Payment Method" required />
+    <button type="submit">Send Request</button>
+  </form>
+
+  <script>
+    function updateTotal() {
+      let subtotal = 0;
+      document.querySelectorAll('.price-box').forEach(box => {
+        if (box.checked) subtotal += parseFloat(box.value);
+      });
+      document.getElementById('subtotal').innerText = subtotal.toFixed(2);
+      document.getElementById('total').innerText = subtotal.toFixed(2);
+    }
+
+    function resetForm() {
+      document.getElementById('calcForm').reset();
+      updateTotal();
+      document.getElementById('payment_method').value = '';
+      document.getElementById('confirm_payment').value = '';
+      document.getElementById('qr-section').style.display = 'none';
+    }
+
+    function selectPayment(method) {
+      document.getElementById('payment_method').value = method;
+      document.getElementById('confirm_payment').value = method;
+    }
+
+    function showQR() {
+      document.getElementById('qr-section').style.display = 'block';
+    }
+
+    window.onload = () => {
+      document.querySelectorAll('.price-box').forEach(box => {
+        box.addEventListener('change', updateTotal);
+      });
+      updateTotal();
+    }
+  </script>
+  </main>
+</body>
+</html>
